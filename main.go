@@ -1,49 +1,20 @@
 package main
 
 import (
-    "bufio"
-    "log"
-    "os"
+    "main/helper"
     "slices"
-    "strconv"
-    "strings"
     "fmt"
 )
 
 func main() {
-    var a []int
-    var b []int
+    first()
+    second()
+}
 
-    f, err := os.Open("input.txt")
-
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    defer f.Close()
-
-    scanner := bufio.NewScanner(f)
-
-    for scanner.Scan() {
-        stringSlice := strings.Split(scanner.Text(), "   ")
-        ai, err := strconv.Atoi(stringSlice[0])
-        if err !=  nil {
-            log.Fatal(err)
-        }
-        a = append(a, ai)
-        bi, err := strconv.Atoi(stringSlice[1])
-        if err !=  nil {
-            log.Fatal(err)
-        }
-        b = append(b, bi)
-        if err := scanner.Err(); err != nil {
-            log.Fatal(err)
-        }
-    }
+func first() {
+    a, b := helper.ReadFile("input.txt")
     slices.Sort(a)
     slices.Sort(b)
-    fmt.Println(a[1:20])
-    fmt.Println(b[1:20])
 
     var r int
     for i := 0; i < len(a); i++ {
@@ -54,4 +25,31 @@ func main() {
         }
     }
     fmt.Println(r)
+}
+
+func second() {
+    a, b := helper.ReadFile("input.txt")
+    
+    m := make(map[int]int)
+    for _, a_v := range a {
+        for _, b_v := range b {
+            if a_v == b_v {
+                _, exists := m[a_v]
+                if exists {
+                    m[a_v] = m[a_v] + 1
+                } else {
+                    m[a_v] = 1
+                }
+            }
+        }
+    }
+    var s int
+    for key, val := range m {
+        s = s + key * val
+    }
+    fmt.Println(s)
+}
+
+func RemoveIndex(s []int, index int) []int {
+    return append(s[:index], s[index+1:]...)
 }
