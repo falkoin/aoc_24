@@ -1,13 +1,13 @@
 package helper
 
 import (
-    "bufio"
-    "log"
-    "os"
-    "strconv"
-    "strings"
+	"bufio"
+	"log"
+	"os"
+	"strconv"
+	"strings"
 )
-func ReadFile(filename string) ([]int, []int) {
+func ReadFileOne(filename string) ([]int, []int) {
     var a []int
     var b []int
 
@@ -38,4 +38,32 @@ func ReadFile(filename string) ([]int, []int) {
         }
     }
     return a, b
+}
+
+func ReadFileTwo(filename string) [][]int {
+    var a [][]int
+
+    f, err := os.Open(filename)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    defer f.Close()
+
+    scanner := bufio.NewScanner(f)
+
+    for scanner.Scan() {
+        stringSlice := strings.Split(scanner.Text(), " ")
+        var b []int
+        for _, entry := range stringSlice {
+            entryInt, err := strconv.Atoi(entry)
+            if err !=  nil {
+                log.Fatal(err)
+            }
+            b = append(b, entryInt)
+        }
+        a = append(a, b)
+    }
+    return a
 }
