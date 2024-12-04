@@ -67,3 +67,12 @@ func ReadFileTwo(filename string) [][]int {
     }
     return a
 }
+
+func ReadFileThree(filename string) string {
+    f, err := os.ReadFile(filename)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+    return string(f)
+}
