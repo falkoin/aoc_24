@@ -1,9 +1,12 @@
 package main
 
 import (
-    "main/helper"
-    "slices"
-    "fmt"
+	"fmt"
+	"log"
+	"main/helper"
+	"regexp"
+	"slices"
+	"strconv"
 )
 
 func main() {
@@ -142,12 +145,29 @@ func checkDiff(row []int) []int {
 }
 
 func dayThreeA() {
+    r := 0
     a := helper.ReadFileThree("input3.txt")
-    searchTerm := "mul("
-    lenSearchTerm := len(searchTerm)
-    for i := 0; i < len(a)-lenSearchTerm; i++ {
-        if a[i:i+lenSearchTerm] == "mul(" {
-            fmt.Println("Yeah")
+    maxTerm := 12
+    pattern := `mul\((\d{1,3}),(\d{1,3})\).*`
+    re := regexp.MustCompile(pattern)
+    i := 0  
+    for i < len(a)-maxTerm {
+        if re.MatchString(a[i:i+maxTerm]) {
+            matches := re.FindStringSubmatch(a[i:i+maxTerm])
+            first, err := strconv.Atoi(matches[1])
+            if err != nil {
+                log.Fatal(err)
+            }
+            second, err := strconv.Atoi(matches[2])
+            if err != nil {
+                log.Fatal(err)
+            }
+            r += first * second 
+            i += 6+len(matches[1])+len(matches[2])
+        } else {
+            i++
         }
     }
+    fmt.Println("Day 3a:")
+    fmt.Println(r)
 }
