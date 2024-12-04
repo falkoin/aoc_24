@@ -15,6 +15,7 @@ func main() {
     dayTwoA()
     dayTwoB()
     dayThreeA()
+    dayThreeB()
 }
 
 func dayOneA() {
@@ -147,9 +148,9 @@ func checkDiff(row []int) []int {
 func dayThreeA() {
     r := 0
     a := helper.ReadFileThree("input3.txt")
-    maxTerm := 12
-    pattern := `mul\((\d{1,3}),(\d{1,3})\).*`
-    re := regexp.MustCompile(pattern)
+    longestPattern := "mul(123,123)"
+    maxTerm := len(longestPattern)
+    re := regexp.MustCompile(`mul\((\d{1,3}),(\d{1,3})\).*`)
     i := 0  
     for i < len(a)-maxTerm {
         if re.MatchString(a[i:i+maxTerm]) {
@@ -163,11 +164,48 @@ func dayThreeA() {
                 log.Fatal(err)
             }
             r += first * second 
-            i += 6+len(matches[1])+len(matches[2])
+            i += len("mul(,)") + len(matches[1]) + len(matches[2])
         } else {
             i++
         }
     }
     fmt.Println("Day 3a:")
+    fmt.Println(r)
+}
+
+func dayThreeB() {
+    r := 0
+    a := helper.ReadFileThree("input3.txt")
+    longestPattern := "mul(123,123)"
+    maxTerm := len(longestPattern)
+    re := regexp.MustCompile(`mul\((\d{1,3}),(\d{1,3})\).*`)
+    reDo := regexp.MustCompile(`do\(\).*`)
+    reDont := regexp.MustCompile(`don't\(\).*`)
+    i := 0  
+    match := true
+    for i < len(a)-maxTerm {
+        if re.MatchString(a[i:i+maxTerm]) && match {
+            matches := re.FindStringSubmatch(a[i:i+maxTerm])
+            first, err := strconv.Atoi(matches[1])
+            if err != nil {
+                log.Fatal(err)
+            }
+            second, err := strconv.Atoi(matches[2])
+            if err != nil {
+                log.Fatal(err)
+            }
+            r += first * second 
+            i += len("mul(,)") + len(matches[1]) + len(matches[2])
+        } else if reDont.MatchString(a[i:i+maxTerm]) {
+            match = false
+            i += len("don't()")
+        } else if reDo.MatchString(a[i:i+maxTerm]) {
+            match = true
+            i += len("do()") 
+        } else {
+            i++
+        }
+    }
+    fmt.Println("Day 3b:")
     fmt.Println(r)
 }
