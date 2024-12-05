@@ -17,6 +17,7 @@ func main() {
     dayThreeA()
     dayThreeB()
     dayFourA()
+    dayFourB()
 }
 
 func dayOneA() {
@@ -248,6 +249,7 @@ func checkXmas(line string) int {
     return n
 }
 
+
 func reverse(input []string) []string {
     var b []string
     for _, line := range input {
@@ -258,4 +260,34 @@ func reverse(input []string) []string {
         b = append(b, string(reversedLine))
     }
     return b
+}
+
+func dayFourB() {
+    a := helper.ReadFileFour("input4.txt")
+    n := 0
+    for i := 0; i < len(a[0])-2; i++ {
+        for j := 0; j < len(a[i])-2; j++ {
+            n += checkXmasCross(string(a[i][j])+string(a[i+1][j+1])+string(a[i+2][j+2])+
+                                string(a[i+2][j])+string(a[i+1][j+1])+string(a[i][j+2]))
+            fmt.Println(string(a[i][j])+string(a[i+1][j+1])+string(a[i+2][j+2])+
+                                string(a[i+2][j])+string(a[i+1][j+1])+string(a[i][j+2]))
+        }
+    }
+    fmt.Println("Day 4b:")
+    fmt.Println(n)
+}
+
+func checkXmasCross(line string) int {
+    n := 0
+    if string(line[0]) == "M" && string(line[1]) == "A" && string(line[2]) == "S" &&
+       string(line[3]) == "S" && string(line[4]) == "A" && string(line[5]) == "M" || 
+       string(line[0]) == "S" && string(line[1]) == "A" && string(line[2]) == "M" &&
+       string(line[3]) == "M" && string(line[4]) == "A" && string(line[5]) == "S" ||
+       string(line[0]) == "M" && string(line[1]) == "A" && string(line[2]) == "S" &&
+       string(line[3]) == "M" && string(line[4]) == "A" && string(line[5]) == "S" || 
+       string(line[0]) == "S" && string(line[1]) == "A" && string(line[2]) == "M" &&
+       string(line[3]) == "S" && string(line[4]) == "A" && string(line[5]) == "M" {
+        n++
+    }
+    return n
 }
