@@ -76,3 +76,24 @@ func ReadFileThree(filename string) string {
     }
     return string(f)
 }
+
+func ReadFileFour(filename string) []string {
+    var a []string
+
+    f, err := os.Open(filename)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    defer f.Close()
+
+    scanner := bufio.NewScanner(f)
+
+    for scanner.Scan() {
+        b := scanner.Text()
+        a = append(a, b)
+    }
+    return a
+
+}
