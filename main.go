@@ -18,10 +18,11 @@ func main() {
     dayThreeB()
     dayFourA()
     dayFourB()
+    dayFiveA()
 }
 
 func dayOneA() {
-    a, b := helper.ReadFileOne("input.txt")
+    a, b := helper.ReadFileOne("input.txt", "   ")
     slices.Sort(a)
     slices.Sort(b)
 
@@ -38,7 +39,7 @@ func dayOneA() {
 }
 
 func dayOneB() {
-    a, b := helper.ReadFileOne("input.txt")
+    a, b := helper.ReadFileOne("input.txt", "   ")
     
     m := make(map[int]int)
     for _, a_v := range a {
@@ -269,8 +270,6 @@ func dayFourB() {
         for j := 0; j < len(a[i])-2; j++ {
             n += checkXmasCross(string(a[i][j])+string(a[i+1][j+1])+string(a[i+2][j+2])+
                                 string(a[i+2][j])+string(a[i+1][j+1])+string(a[i][j+2]))
-            fmt.Println(string(a[i][j])+string(a[i+1][j+1])+string(a[i+2][j+2])+
-                                string(a[i+2][j])+string(a[i+1][j+1])+string(a[i][j+2]))
         }
     }
     fmt.Println("Day 4b:")
@@ -290,4 +289,39 @@ func checkXmasCross(line string) int {
         n++
     }
     return n
+}
+
+func dayFiveA() {
+    a := helper.ReadFileFive("input5.txt", "|")
+    b := helper.ReadFileFive("input5.txt", ",")
+
+    var toAdd []int
+    for p, pageNumbers := range b {
+        skipped := false
+
+        for _, rule := range a {
+            var findings []int
+            for _, number := range pageNumbers {
+                if rule[0] == number || rule[1] == number {
+                    findings = append(findings, number)
+
+                }
+            }
+            if len(findings) == 2 && findings[0] == rule[1] {
+                skipped = true
+                break
+            }
+        }
+        if !skipped {
+            toAdd = append(toAdd, p)
+        }
+    }
+    var r int
+    for _, index := range toAdd {
+        pageNumbers := b[index]
+        r += pageNumbers[int(float64(len(pageNumbers)+1)/2.0)-1]
+    }
+
+    fmt.Println("Day 5a:")
+    fmt.Println(r)
 }

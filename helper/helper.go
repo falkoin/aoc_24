@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 )
-func ReadFileOne(filename string) ([]int, []int) {
+func ReadFileOne(filename string, delimiter string) ([]int, []int) {
     var a []int
     var b []int
 
@@ -22,7 +22,7 @@ func ReadFileOne(filename string) ([]int, []int) {
     scanner := bufio.NewScanner(f)
 
     for scanner.Scan() {
-        stringSlice := strings.Split(scanner.Text(), "   ")
+        stringSlice := strings.Split(scanner.Text(), delimiter)
         ai, err := strconv.Atoi(stringSlice[0])
         if err !=  nil {
             log.Fatal(err)
@@ -96,4 +96,36 @@ func ReadFileFour(filename string) []string {
     }
     return a
 
+}
+
+func ReadFileFive(filename string, delimiter string) [][]int {
+    var a [][]int
+
+    f, err := os.Open(filename)
+
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    defer f.Close()
+
+    scanner := bufio.NewScanner(f)
+
+    for scanner.Scan() {
+        stringSlice := strings.Split(scanner.Text(), delimiter)
+        var b []int
+        if len(stringSlice) > 1 {
+            for _, ele := range stringSlice {
+                ai, err := strconv.Atoi(ele)
+                if err !=  nil {
+                    log.Fatal(err)
+                }
+                b = append(b, ai)
+            }
+        } else {
+            continue
+        }
+        a = append(a, b)
+    }
+    return a
 }
