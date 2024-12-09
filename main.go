@@ -19,6 +19,7 @@ func main() {
     dayFourA()
     dayFourB()
     dayFiveA()
+    dayFiveB()
 }
 
 func dayOneA() {
@@ -295,8 +296,8 @@ func dayFiveA() {
     a := helper.ReadFileFive("input5.txt", "|")
     b := helper.ReadFileFive("input5.txt", ",")
 
-    var toAdd []int
-    for p, pageNumbers := range b {
+    var r int
+    for _, pageNumbers := range b {
         skipped := false
 
         for _, rule := range a {
@@ -313,15 +314,58 @@ func dayFiveA() {
             }
         }
         if !skipped {
-            toAdd = append(toAdd, p)
+            r += pageNumbers[int(float64(len(pageNumbers)+1)/2.0)-1]
         }
     }
-    var r int
-    for _, index := range toAdd {
-        pageNumbers := b[index]
-        r += pageNumbers[int(float64(len(pageNumbers)+1)/2.0)-1]
-    }
 
+    fmt.Println("Day 5a:")
+    fmt.Println(r)
+}
+
+func dayFiveB() {
+    a := helper.ReadFileFive("input5.txt", "|")
+    b := helper.ReadFileFive("input5.txt", ",")
+    var c [][]int
+
+    var r int
+    for _, pageNumbers := range b {
+        skipped := false
+
+        for _, rule := range a {
+            var findings []int
+            for ni, number := range pageNumbers {
+                if rule[0] == number || rule[1] == number {
+                    findings = append(findings, ni)
+
+                }
+            }
+            if len(findings) == 2 && pageNumbers[findings[0]] == rule[1] {
+                fmt.Println("Rule: ", rule)
+                fmt.Println(pageNumbers)
+                tempNumber := pageNumbers[findings[1]]
+                tempNumber2 := pageNumbers[findings[0]]
+                pageNumbers = append(pageNumbers[:findings[1]], pageNumbers[findings[1]+1:]...)
+                secondPart := make([]int, len(pageNumbers[findings[0]:]))
+                copy(secondPart, pageNumbers[findings[0]:])
+                fmt.Println(tempNumber)
+                firstPart := make([]int, len(pageNumbers[findings[0]:]))
+                copy(firstPart, pageNumbers[findings[0]:])
+                firstPart = append(pageNumbers[:findings[0]], tempNumber)
+                fmt.Println(tempNumber, tempNumber2)
+                secondPart[0] = tempNumber2
+                fmt.Println("First: ", firstPart, " Second: ", secondPart)
+                pageNumbers := append(firstPart, secondPart...)
+                fmt.Println("Removed: ", tempNumber)
+                fmt.Println("Slice: ", firstPart)
+                fmt.Println(pageNumbers)
+                skipped = true
+            }
+        }
+        if skipped {
+            r += pageNumbers[int(float64(len(pageNumbers)+1)/2.0)-1]
+        }
+        c = append(c, pageNumbers)
+    }
     fmt.Println("Day 5a:")
     fmt.Println(r)
 }
